@@ -8,15 +8,9 @@ public class Main {
 		
 		for(int i = 0 ; i < 4*8 ; i++) {
 			
-			Client c = new Client(b);
+			Client c = new Client(b,"c"+i);
 			Thread th = new Thread(c);
-			
-			try {
-				th.join();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+
 			th.start();
 		}
 		
