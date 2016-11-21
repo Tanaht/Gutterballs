@@ -6,7 +6,6 @@ public class SalleChaussure {
 		try {
 			Thread.sleep(100);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		System.out.println("Le client "+c.getNom()+" prend ses chaussures");
@@ -20,8 +19,6 @@ public class SalleChaussure {
 			}
 		}
 		notifyAll();
-		
-		
 	}
 	
 	public synchronized void restituer(Client c) {

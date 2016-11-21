@@ -67,7 +67,7 @@ public class Client implements Runnable {
 		return nom;
 	}
 
-	public boolean isJouer() {
+	public synchronized boolean isJouer() {
 		return jouer;
 	}
 

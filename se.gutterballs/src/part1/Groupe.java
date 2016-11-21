@@ -13,11 +13,11 @@ public class Groupe {
 	
 	private List<Client> clients;//Client or Thread
 	
-	public Groupe(String nom) {
+	public Groupe(String nom, int capacite) {
 		this.clients = new ArrayList<Client>();
-		capacite = 8;
-		numPiste = -1;
-		this.nom=nom;
+		this.capacite = capacite;
+		numPiste = Bowling.PISTE_INDISPONIBLE;
+		this.nom = nom;
 	}
 	
 	public synchronized boolean isComplete() {
@@ -72,7 +72,7 @@ public class Groupe {
 		return numPiste;
 	}
 
-	public String getNom() {
+	public synchronized String getNom() {
 		return nom;
 	}
 

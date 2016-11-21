@@ -4,42 +4,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Bowling {
-	private List<Piste> pistes;//x10
-	private Danse danse;
+	private List<Piste> pistes;
 	private SalleChaussure salleChaussure;
 	private Guichet guichet;
-	
-	/**
-	 * Initialisation du Bowling,
-	 * Il y a 10 pistes de Jeu.
-	 */
-	public Bowling() {
-		this.danse = new Danse();
+	protected static final int PISTE_INDISPONIBLE = -1;
+
+	public Bowling(int nbPistes, int capaciteGroupe) {
 		this.salleChaussure = new SalleChaussure();
-		this.guichet = new Guichet();
+		this.guichet = new Guichet(capaciteGroupe);
+		this.pistes = new ArrayList<Piste>();
 		
-		this.pistes = new ArrayList<>();
-		
-		for(int i = 0 ; i < 3 ; i++) {
+		for(int i = 0 ; i < nbPistes ; i++) {
 			this.pistes.add(i, new Piste(i));
 		}
 	}
 	
-	public  void arriverClient(Client c) {
+	public void arriverClient(Client c) {
 		guichet.inscription(c);
-		
 		salleChaussure.prendre(c);
 		
-		while(!pisteLibre() && c.getGroupe().pisteReservee() == -1){
+		while(!pisteLibre() && c.getGroupe().pisteReservee() == PISTE_INDISPONIBLE){
 			this.danser(c);
 		}
 		
-		
-		
-		if(c.getGroupe().pisteReservee() == -1){
+		if(c.getGroupe().pisteReservee() == PISTE_INDISPONIBLE){
 			int pisteLibre = laquelleLibre();
 			System.out.println("La piste "+pisteLibre+" est libre , le client "+c.getNom()+"du groupe "+  c.getGroupe().getNom()+" occupe cette piste");
-			
 			prendrePiste(c, pisteLibre);
 		}
 		else{
@@ -48,10 +38,16 @@ public class Bowling {
 			prendrePiste(c, c.getGroupe().pisteReservee());
 		}
 		
+		Piste p = pistes.get(c.getGroupe().pisteReservee());
+		p.jouer(c);
 		
-		salleChaussure.restituer(c);
+		System.out.println("Le client "+c.getNom()+" du groupe "+c.getGroupe().getNom()+" a fini du jouer au bowling");
+		p.quitter(c);
+		
 		guichet.paiement(c);
-		
+		System.out.println("Le client "+c.getNom() +"du groupe " +c.getGroupe().getNom()+ " a fini de payer");
+		salleChaussure.restituer(c);
+		System.out.println("Le client "+c.getNom() +"du groupe " +c.getGroupe().getNom()+ " a rendu ses chaussures et a quitte le bowling");
 	}
 	
 	public synchronized boolean pisteLibre(){
@@ -61,19 +57,21 @@ public class Bowling {
 		}
 		return res;
 	}
-	public synchronized void danser(Client c) {
+	
+	private synchronized void danser(Client c) {
 		System.out.println(c.getNom()+ "danse du groupe "+c.getGroupe().getNom());
 		try {
 			wait();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	public synchronized void prendrePiste(Client c, int numPiste){
+	
+	private synchronized void prendrePiste(Client c, int numPiste){
 		Piste p = pistes.get(numPiste);
 		p.entrerPiste(c);
 		c.getGroupe().setNumPiste(numPiste);
+		
 		notifyAll();
 		
 		while(!c.getGroupe().tousSurPiste()){
@@ -84,12 +82,13 @@ public class Bowling {
 				e.printStackTrace();
 			}
 		}
-
+		notifyAll();
+		/*
 		System.out.println("Le client "+c.getNom()+" du groupe "+c.getGroupe().getNom()+" joue enfin au bowling");
 
 		p.jouer(c);
 		
-		notifyAll();
+		
 		while(!c.getGroupe().tousjouer()){
 			try {
 				wait();
@@ -97,7 +96,7 @@ public class Bowling {
 				e.printStackTrace();
 			}
 		}
-		
+		notifyAll();
 		System.out.println("Le client "+c.getNom()+" du groupe "+c.getGroupe().getNom()+" a fini du jouer au bowling");
 		p.quitter(c);
 		
@@ -106,7 +105,7 @@ public class Bowling {
 			notifyAll();
 		
 		}
-		
+		*/
 	}
 	
 	
@@ -115,7 +114,7 @@ public class Bowling {
 			if(this.pistes.get(i).estLibre())
 				return i;
 		}
-		return -1;
+		return PISTE_INDISPONIBLE;
 		
 	}
 }
