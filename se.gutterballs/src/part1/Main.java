@@ -15,7 +15,7 @@ public class Main {
 		ArrayList<Thread> clients = new ArrayList<Thread>();
 		
 		for(int i = 0 ; i < nbClients ; i++) {
-			Client c = new Client(b,"c"+i);
+			Client c = new Client(b);
 			Thread th = new Thread(c);
 			clients.add(th);
 			th.start();

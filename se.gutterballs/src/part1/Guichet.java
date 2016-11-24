@@ -16,24 +16,13 @@ public class Guichet {
 	
 	
 	public synchronized void inscription(Client c){
-		System.out.println("Le client "+c.getNom() +" s'inscrit");
-		try {
-			Thread.sleep(200);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		if(this.groupe.isComplete()) {
+			this.groupe = new Groupe("G" + (++k), capaciteGroupe);
 		}
 		
-		Thread.currentThread().setName(this.groupe + ":" + c);
-		System.out.println("Le client "+c.getNom()+ " rejoind le groupe "+this.groupe.getNom());
 		this.groupe.addClient(c);
-		if(this.groupe.isComplete()){
-			System.out.println("Le groupe "+this.groupe.getNom()+ " est plein");
-			this.groupe = new Groupe("G"+(++k), capaciteGroupe);
-		}
 		
-		//Le client attend tant que g n'est pas complet.
 		while(!c.getGroupe().isComplete()) {
-			System.out.println(c + " attend que son groupe " + c.getGroupe() + " soit plein");
 			try {
 				wait();
 			} catch (InterruptedException e) {
@@ -42,8 +31,19 @@ public class Guichet {
 			}
 		}
 		
-		notifyAll();
+		notify();
 		
+		/*
+		 * L'inscription du groupe dans le système informatique prend un certain temps, 
+		 * on suppose que le système est mis à jour (le sleep) 
+		 * une fois que tout les clients pour former un groupe sont la.
+		 */
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 	
 	public synchronized void paiement(Client c){

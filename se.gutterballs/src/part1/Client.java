@@ -3,25 +3,23 @@ package part1;
 public class Client implements Runnable {
 	private Bowling b;
 	private Groupe g;
-	private String nom;
 	private boolean chaussureBowling;
 	private boolean estSurPiste;
 	private boolean jouer;
 	
-	public Client(Bowling b,String nom) {
+	public Client(Bowling b) {
 		this.b = b;
 		this.g = null;
 		this.chaussureBowling = false;
 		this.estSurPiste = false;
 		this.jouer = false;
-		this.nom = nom;
 	}
 	
 	@Override
 	public void run() {
-		//b.arriverClient(this);
+		b.arriverClient(this);
 		
-		b.nouveauClient(this);
+		//b.nouveauClient(this);
 	}
 	
 	public boolean aSesChaussureDebowling(){
@@ -66,11 +64,11 @@ public class Client implements Runnable {
 	}
 
 	public String getNom() {
-		return nom;
+		return Thread.currentThread().getName();
 	}
 	
 	public String toString() {
-		return nom;
+		return Thread.currentThread().getName();
 	}
 
 	public boolean isJouer() {

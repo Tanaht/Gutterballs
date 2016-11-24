@@ -28,6 +28,7 @@ public class Groupe {
 		if(!isComplete()) {
 			this.clients.add(c);
 			c.setGroupe(this);
+			System.out.println("[" + c + "] inscrit dans le groupe [" + this + "]");
 		}
 	}
 	
