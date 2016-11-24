@@ -72,9 +72,11 @@ public class Groupe {
 		return numPiste;
 	}
 
-	public synchronized String getNom() {
+	public String getNom() {
 		return nom;
 	}
 
-	
+	public String toString() {
+		return nom;
+	}
 }

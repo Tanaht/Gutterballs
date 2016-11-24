@@ -29,7 +29,7 @@ public class Bowling {
 		
 		if(c.getGroupe().pisteReservee() == PISTE_INDISPONIBLE){
 			int pisteLibre = laquelleLibre();
-			System.out.println("La piste "+pisteLibre+" est libre , le client "+c.getNom()+"du groupe "+  c.getGroupe().getNom()+" occupe cette piste");
+			System.out.println("La piste "+pisteLibre+" est libre , le client "+c.getNom()+" du groupe "+  c.getGroupe().getNom()+" occupe cette piste");
 			prendrePiste(c, pisteLibre);
 		}
 		else{
@@ -41,13 +41,13 @@ public class Bowling {
 		Piste p = pistes.get(c.getGroupe().pisteReservee());
 		p.jouer(c);
 		
-		System.out.println("Le client "+c.getNom()+" du groupe "+c.getGroupe().getNom()+" a fini du jouer au bowling");
+		System.out.println("Le client "+c.getNom()+" du groupe "+c.getGroupe().getNom()+" a fini de jouer au bowling");
 		p.quitter(c);
 		
 		guichet.paiement(c);
-		System.out.println("Le client "+c.getNom() +"du groupe " +c.getGroupe().getNom()+ " a fini de payer");
+		System.out.println("Le client "+c.getNom() +" du groupe " +c.getGroupe().getNom()+ " a fini de payer");
 		salleChaussure.restituer(c);
-		System.out.println("Le client "+c.getNom() +"du groupe " +c.getGroupe().getNom()+ " a rendu ses chaussures et a quitte le bowling");
+		System.out.println("Le client "+c.getNom() +" du groupe " +c.getGroupe().getNom()+ " a rendu ses chaussures et a quitte le bowling");
 	}
 	
 	public synchronized boolean pisteLibre(){
@@ -59,7 +59,7 @@ public class Bowling {
 	}
 	
 	private synchronized void danser(Client c) {
-		System.out.println(c.getNom()+ "danse du groupe "+c.getGroupe().getNom());
+		System.out.println(c.getNom()+ " danse du groupe "+c.getGroupe().getNom());
 		try {
 			wait();
 		} catch (InterruptedException e) {
@@ -83,29 +83,6 @@ public class Bowling {
 			}
 		}
 		notifyAll();
-		/*
-		System.out.println("Le client "+c.getNom()+" du groupe "+c.getGroupe().getNom()+" joue enfin au bowling");
-
-		p.jouer(c);
-		
-		
-		while(!c.getGroupe().tousjouer()){
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		notifyAll();
-		System.out.println("Le client "+c.getNom()+" du groupe "+c.getGroupe().getNom()+" a fini du jouer au bowling");
-		p.quitter(c);
-		
-		if(p.estLibre()){
-			System.out.println("Le groupe "+c.getGroupe().getNom()+" vient de finir de jouer sur la piste "+p.getNumero());
-			notifyAll();
-		
-		}
-		*/
 	}
 	
 	
@@ -116,5 +93,10 @@ public class Bowling {
 		}
 		return PISTE_INDISPONIBLE;
 		
+	}
+
+	public void nouveauClient(Client client) {
+		guichet.inscription(client);
+		System.out.println("Le client " + " " + Thread.currentThread().getName() + " appartient au groupe: " + client.getGroupe());
 	}
 }

@@ -19,55 +19,61 @@ public class Client implements Runnable {
 	
 	@Override
 	public void run() {
-		b.arriverClient(this);
+		//b.arriverClient(this);
+		
+		b.nouveauClient(this);
 	}
 	
-	public synchronized boolean aSesChaussureDebowling(){
+	public boolean aSesChaussureDebowling(){
 		return chaussureBowling;
 	}
 	
-	public synchronized void recevoirChaussuresBoowling(){
+	public void recevoirChaussuresBoowling(){
 		this.chaussureBowling = true;
 	}
 	
-	public synchronized void rendreChaussres(){
+	public void rendreChaussres(){
 		this.chaussureBowling = false;
 	}
 	
-	public synchronized void setGroupe(Groupe g) {
+	public void setGroupe(Groupe g) {
 		this.g = g;
 	}
 	
 	
-	public synchronized boolean estSurLaPiste(){
+	public boolean estSurLaPiste(){
 		return estSurPiste;
 	}
 	
-	public synchronized void entrerPiste(){
+	public void entrerPiste(){
 		estSurPiste = true;
 	}
 	
-	public synchronized void quitterPiste(){
+	public void quitterPiste(){
 		estSurPiste = false;
 	}
 	
-	public synchronized void jouer(){
+	public void jouer(){
 		jouer = true;
 	}
 	
-	public synchronized void finirjouer(){
+	public void finirjouer(){
 		jouer = false;
 	}
 	
-	public synchronized Groupe getGroupe() {
+	public Groupe getGroupe() {
 		return this.g;
 	}
 
-	public synchronized String getNom() {
+	public String getNom() {
+		return nom;
+	}
+	
+	public String toString() {
 		return nom;
 	}
 
-	public synchronized boolean isJouer() {
+	public boolean isJouer() {
 		return jouer;
 	}
 

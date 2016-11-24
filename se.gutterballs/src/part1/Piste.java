@@ -25,7 +25,7 @@ public class Piste {
 				e.printStackTrace();
 			}
 		}
-		notifyAll();
+		notify();
 
 	}
 

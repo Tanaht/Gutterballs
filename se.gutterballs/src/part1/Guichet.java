@@ -20,11 +20,10 @@ public class Guichet {
 		try {
 			Thread.sleep(200);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		
+		Thread.currentThread().setName(this.groupe + ":" + c);
 		System.out.println("Le client "+c.getNom()+ " rejoind le groupe "+this.groupe.getNom());
 		this.groupe.addClient(c);
 		if(this.groupe.isComplete()){
@@ -34,7 +33,7 @@ public class Guichet {
 		
 		//Le client attend tant que g n'est pas complet.
 		while(!c.getGroupe().isComplete()) {
-		
+			System.out.println(c + " attend que son groupe " + c.getGroupe() + " soit plein");
 			try {
 				wait();
 			} catch (InterruptedException e) {
