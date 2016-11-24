@@ -3,6 +3,8 @@ package part1;
 public class SalleChaussure {
 	
 	public synchronized void prendre(Client c) {
+		
+		//Mettre ses chaussures prend un certains temps
 		try {
 			Thread.sleep(100);
 		} catch (InterruptedException e) {
@@ -11,7 +13,7 @@ public class SalleChaussure {
 		
 		System.out.println("Le client " + c + " du groupe " + c.getGroupe() + " prend ses chaussures");
 		c.recevoirChaussuresBoowling();
-		notifyAll();
+		
 		while(!c.getGroupe().toutesChaussuresBoowling()){
 			try {
 				wait();
@@ -19,7 +21,7 @@ public class SalleChaussure {
 				e.printStackTrace();
 			}
 		}
-		notifyAll();
+		notify();
 	}
 	
 	public synchronized void restituer(Client c) {

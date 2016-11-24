@@ -20,9 +20,8 @@ public class Bowling {
 	}
 	
 	public void arriverClient(Client c) {
-		guichet.inscription(c);
-		System.out.println(c + " va prendre ses chaussures");
-		salleChaussure.prendre(c);
+		guichet.inscription(c);//inscription et création des groupes
+		salleChaussure.prendre(c);//enfiler les chaussures en groupe
 		
 		while(!pisteLibre() && c.getGroupe().pisteReservee() == PISTE_INDISPONIBLE){
 			this.danser(c);
@@ -59,8 +58,8 @@ public class Bowling {
 		return res;
 	}
 	
-	private synchronized void danser(Client c) {
-		System.out.println(c.getNom()+ " danse du groupe "+c.getGroupe().getNom());
+	private synchronized void danser(Client c) {//TODO: expatrier cette méthode dans la classe Danse
+		System.out.println(c.getNom()+ " danse du groupe "+ c.getGroupe().getNom());
 		try {
 			wait();
 		} catch (InterruptedException e) {
