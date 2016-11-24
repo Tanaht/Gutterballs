@@ -21,6 +21,7 @@ public class Bowling {
 	
 	public void arriverClient(Client c) {
 		guichet.inscription(c);
+		System.out.println(c + " va prendre ses chaussures");
 		salleChaussure.prendre(c);
 		
 		while(!pisteLibre() && c.getGroupe().pisteReservee() == PISTE_INDISPONIBLE){

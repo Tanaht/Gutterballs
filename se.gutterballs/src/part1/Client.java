@@ -30,7 +30,7 @@ public class Client implements Runnable {
 		this.chaussureBowling = true;
 	}
 	
-	public void rendreChaussres(){
+	public void rendreChaussures(){
 		this.chaussureBowling = false;
 	}
 	

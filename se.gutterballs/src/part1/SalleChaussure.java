@@ -8,7 +8,8 @@ public class SalleChaussure {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		System.out.println("Le client "+c.getNom()+" prend ses chaussures");
+		
+		System.out.println("Le client " + c + " du groupe " + c.getGroupe() + " prend ses chaussures");
 		c.recevoirChaussuresBoowling();
 		notifyAll();
 		while(!c.getGroupe().toutesChaussuresBoowling()){
@@ -29,7 +30,7 @@ public class SalleChaussure {
 			e.printStackTrace();
 		}
 		System.out.println("Le client "+c.getNom()+" rend ses chaussures");
-		c.rendreChaussres();
+		c.rendreChaussures();
 		notifyAll();
 	}
 }

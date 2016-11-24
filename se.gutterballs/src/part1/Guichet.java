@@ -16,6 +16,7 @@ public class Guichet {
 	
 	
 	public synchronized void inscription(Client c){
+		
 		if(this.groupe.isComplete()) {
 			this.groupe = new Groupe("G" + (++k), capaciteGroupe);
 		}
@@ -36,7 +37,7 @@ public class Guichet {
 		/*
 		 * L'inscription du groupe dans le système informatique prend un certain temps, 
 		 * on suppose que le système est mis à jour (le sleep) 
-		 * une fois que tout les clients pour former un groupe sont la.
+		 * une fois que tout les clients pour former un groupe sont là.
 		 */
 		try {
 			Thread.sleep(200);
