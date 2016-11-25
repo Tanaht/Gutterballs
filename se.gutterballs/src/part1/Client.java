@@ -17,9 +17,9 @@ public class Client implements Runnable {
 	
 	@Override
 	public void run() {
-		b.arriverClient(this);
+		//b.arriverClient(this);
 		
-		//b.nouveauClient(this);
+		b.nouveauClient(this);
 	}
 	
 	public boolean aSesChaussureDebowling(){
