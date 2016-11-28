@@ -1,58 +1,32 @@
 package part1;
 
+import java.util.Random;
+
 public class Piste {
-	private boolean estLibre;
-	private int numero;
-
-	public Piste(int numero) {
-		estLibre = true;
-		this.numero = numero;
+	private int id;
+	
+	public Piste(int id) {
+		this.id = id;
 	}
-
-	public synchronized void jouer(Client c) {
-		
+	
+	public void utiliser(Client client) {
+		client.getGroupe().addClientSurPiste(client);
+		client.getGroupe().waitAllSurPiste(client);
+		this.jouer();
+	}
+	public void jouer() {
 		try {
-			Thread.sleep(400);
+			//Il faut qu'une partie dure plus longtemps que le temps que va mettre le groupe suivant pour s'inscrire et prendre leurs chaussures.
+			Thread.sleep(9000 + new Random().nextInt(2000));//On part du principe que certaine partie sont plus rapide que d'autres
 		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		c.jouer();
-		while(!c.getGroupe().tousjouer()){
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		notify();
-
 	}
-
-	public synchronized boolean estLibre() {
-		return this.estLibre;
+	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return "[Piste-" + this.id + "]";
 	}
-
-	public synchronized void entrerPiste(Client c) {
-		estLibre = false;
-		c.entrerPiste();
-	}
-
-	public synchronized void quitter(Client c) {
-
-		c.quitterPiste();
-		if (c.getGroupe().personneSurPiste())
-			estLibre = true;
-		
-		if(estLibre()){
-			System.out.println("Le groupe "+c.getGroupe().getNom()+" vient de finir de jouer sur la piste "+getNumero());
-			notifyAll();
-		
-		}
-	}
-
-	public int getNumero() {
-		return numero;
-	}
-
 }

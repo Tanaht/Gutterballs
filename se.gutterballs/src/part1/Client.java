@@ -1,78 +1,43 @@
 package part1;
 
-public class Client implements Runnable {
-	private Bowling b;
-	private Groupe g;
-	private boolean chaussureBowling;
-	private boolean estSurPiste;
-	private boolean jouer;
+public class Client implements Runnable{
+	private Groupe groupe;
+	private int chaussures;
+	private Bowling bowling;
 	
 	public Client(Bowling b) {
-		this.b = b;
-		this.g = null;
-		this.chaussureBowling = false;
-		this.estSurPiste = false;
-		this.jouer = false;
+		this.bowling = b;
+		this.chaussures = 0;
+	}
+
+	@Override
+	public void run() {
+		System.out.println(this + "[entre dans le bowling]");
+		this.bowling.entrer(this);
+		System.out.println(this + "[quitte le bowling]");
+	}
+	
+	public void putChaussures() {
+		this.chaussures = 1;
+		this.getGroupe().addClientChausser(this);
+	}
+	
+	public void removeChaussures() {
+		this.chaussures = 0;
+		System.out.println(this + "[rend ses chaussures]");
 	}
 	
 	@Override
-	public void run() {
-		//b.arriverClient(this);
-		
-		b.nouveauClient(this);
-	}
-	
-	public boolean aSesChaussureDebowling(){
-		return chaussureBowling;
-	}
-	
-	public void recevoirChaussuresBoowling(){
-		this.chaussureBowling = true;
-	}
-	
-	public void rendreChaussures(){
-		this.chaussureBowling = false;
-	}
-	
-	public void setGroupe(Groupe g) {
-		this.g = g;
-	}
-	
-	
-	public boolean estSurLaPiste(){
-		return estSurPiste;
-	}
-	
-	public void entrerPiste(){
-		estSurPiste = true;
-	}
-	
-	public void quitterPiste(){
-		estSurPiste = false;
-	}
-	
-	public void jouer(){
-		jouer = true;
-	}
-	
-	public void finirjouer(){
-		jouer = false;
+	public String toString() {
+		// TODO Auto-generated method stub
+		return "[" + Thread.currentThread().getName() + "]";
 	}
 	
 	public Groupe getGroupe() {
-		return this.g;
+		return groupe;
 	}
 
-	public String getNom() {
-		return Thread.currentThread().getName();
+	public void setGroupe(Groupe groupe) {
+		this.groupe = groupe;
 	}
-	
-	public String toString() {
-		return Thread.currentThread().getName();
-	}
-
-	public boolean isJouer() {
-		return jouer;
-	}
-
 }

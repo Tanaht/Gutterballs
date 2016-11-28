@@ -1,102 +1,105 @@
 package part1;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class Bowling {
-	private List<Piste> pistes;
-	private SalleChaussure salleChaussure;
-	private Guichet guichet;
-	protected static final int PISTE_INDISPONIBLE = -1;
 
-	public Bowling(int nbPistes, int capaciteGroupe) {
-		this.salleChaussure = new SalleChaussure();
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public class Bowling {
+	private Guichet guichet;
+	private SalleChaussure vestiaire;
+	private PisteDeDanse pisteDeDanse;
+	
+	private List<Piste> pistes;
+	private HashMap<Groupe, Piste> reservations;
+	private HashMap<Piste, Integer> partiesParPiste;
+	private int totalParties;
+	
+	public Bowling(int nbPiste, int capaciteGroupe) {
+		this.pisteDeDanse = new PisteDeDanse();
 		this.guichet = new Guichet(capaciteGroupe);
-		this.pistes = new ArrayList<Piste>();
+		this.vestiaire = new SalleChaussure();
+		this.totalParties = 0;
 		
-		for(int i = 0 ; i < nbPistes ; i++) {
-			this.pistes.add(i, new Piste(i));
+		this.pistes = new ArrayList<>();
+		this.reservations = new HashMap<>();
+		this.partiesParPiste = new HashMap<>();
+
+		for(int i = 0 ; i < nbPiste ; i++) {
+			this.pistes.add(new Piste(i+1));
+			this.partiesParPiste.put(this.pistes.get(i), 0);
 		}
+		
 	}
 	
-	public void arriverClient(Client c) {
-		guichet.inscription(c);//inscription et création des groupes
-		salleChaussure.prendre(c);//enfiler les chaussures en groupe
-		
-		while(!pisteLibre() && c.getGroupe().pisteReservee() == PISTE_INDISPONIBLE){
-			this.danser(c);
-		}
-		
-		if(c.getGroupe().pisteReservee() == PISTE_INDISPONIBLE){
-			int pisteLibre = laquelleLibre();
-			System.out.println("La piste "+pisteLibre+" est libre , le client "+c.getNom()+" du groupe "+  c.getGroupe().getNom()+" occupe cette piste");
-			prendrePiste(c, pisteLibre);
-		}
-		else{
-			
-			System.out.println("Le client "+c.getNom()+" rejoint son groupe "+c.getGroupe().getNom()+" sur la piste "+c.getGroupe().pisteReservee());
-			prendrePiste(c, c.getGroupe().pisteReservee());
-		}
-		
-		Piste p = pistes.get(c.getGroupe().pisteReservee());
-		p.jouer(c);
-		
-		System.out.println("Le client "+c.getNom()+" du groupe "+c.getGroupe().getNom()+" a fini de jouer au bowling");
-		p.quitter(c);
-		
-		guichet.paiement(c);
-		System.out.println("Le client "+c.getNom() +" du groupe " +c.getGroupe().getNom()+ " a fini de payer");
-		salleChaussure.restituer(c);
-		System.out.println("Le client "+c.getNom() +" du groupe " +c.getGroupe().getNom()+ " a rendu ses chaussures et a quitte le bowling");
+	public synchronized HashMap<Piste, Integer> getPartiesParPiste() {
+		return this.partiesParPiste;
 	}
 	
-	public synchronized boolean pisteLibre(){
-		boolean res = false;
-		for(Piste p: pistes){
-			res = res || p.estLibre();
-		}
-		return res;
+	public synchronized int getTotalParties() {
+		return this.totalParties;
+	}
+	public synchronized boolean pisteOccupee() {
+		return this.pistes.size() == this.reservations.size();
 	}
 	
-	private synchronized void danser(Client c) {//TODO: expatrier cette méthode dans la classe Danse
-		System.out.println(c.getNom()+ " danse du groupe "+ c.getGroupe().getNom());
-		try {
-			wait();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private synchronized void prendrePiste(Client c, int numPiste){
-		Piste p = pistes.get(numPiste);
-		p.entrerPiste(c);
-		c.getGroupe().setNumPiste(numPiste);
-		
-		notifyAll();
-		
-		while(!c.getGroupe().tousSurPiste()){
-			
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+	public synchronized void reserverPiste(Groupe groupe) {
+		for(Piste piste : this.pistes) {
+			if(!this.reservations.containsValue(piste)) {
+				this.reservations.put(groupe, piste);
+				this.totalParties++;
+				this.partiesParPiste.put(piste, this.partiesParPiste.get(piste)+1);
+				System.out.println(groupe + "[" + Thread.currentThread().getName() + "][piste reserver]");
+				return;
 			}
 		}
-		notifyAll();
 	}
 	
-	
-	public synchronized int laquelleLibre() {
-		for(int i = 0 ; i < this.pistes.size() ; i++) {
-			if(this.pistes.get(i).estLibre())
-				return i;
+	private synchronized void libererPiste(Groupe groupe) {
+		if(this.reservations.containsKey(groupe)) {
+			System.out.println("[un membre de]" + groupe + "[indique que le groupe à finit de jouer sur]" + this.reservations.get(groupe));
+			this.reservations.remove(groupe);
+			this.pisteDeDanse.pisteLiberee();
 		}
-		return PISTE_INDISPONIBLE;
-		
 	}
-
-	public void nouveauClient(Client client) {
-		guichet.inscription(client);
-		System.out.println("Le client " + " " + Thread.currentThread().getName() + " appartient au groupe: " + client.getGroupe());
+	
+	public synchronized void reservation(Client client) {
+		
+		if(!this.reservations.containsKey(client.getGroupe())) {
+			this.reserverPiste(client.getGroupe());
+		}
+		else {
+			System.out.println(client + "" + client.getGroupe() + "[piste déjà reserver]");
+		}
+	}
+	
+	public void entrer(Client client) {
+		//phase d'inscription (prend 200 ms)
+		this.guichet.inscription(client);
+		
+		Groupe groupe = client.getGroupe();
+		//attente des membres du groupe
+		groupe.waitUntilComplete();
+		
+		this.vestiaire.prendre(client);
+		
+		groupe.waitAllChausser(client);
+		
+		if(this.pisteOccupee())
+			this.pisteDeDanse.echauffement(client);
+		
+		this.reservation(client);
+		
+		Piste piste = this.reservations.get(groupe);
+		
+		piste.utiliser(client);
+		
+		//Un membre du groupe va indiquer que la piste est libre.
+		this.libererPiste(groupe);
+		client.setGroupe(null);
+		System.out.println(client + "[quitte le groupe]" + groupe);
+		guichet.payer(client);
+		vestiaire.rendre(client);
 	}
 }

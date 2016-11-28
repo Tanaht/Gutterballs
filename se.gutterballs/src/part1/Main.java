@@ -1,34 +1,39 @@
 package part1;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map.Entry;
 
 public class Main {
 	public static void main(String[] args) {
-		//@mail: benjamin.rouxel@inria.fr
+		int nbGroupe = 15, capaciteGroupe = 4, nbPistes = 5;
 		
-		int nbPistes = 3;
-		int tailleGroupes = 8;
-		int nbGroupes = 6;
-		int nbClients = tailleGroupes * nbGroupes;
-		
-		Bowling b = new Bowling(nbPistes, tailleGroupes);
+		Bowling bowling = new Bowling(nbPistes, capaciteGroupe);
 		ArrayList<Thread> clients = new ArrayList<Thread>();
 		
-		for(int i = 0 ; i < nbClients ; i++) {
-			Client c = new Client(b);
-			Thread th = new Thread(c);
+		for(int i = 0 ; i < nbGroupe * capaciteGroupe ; i++) {
+			Client client = new Client(bowling);
+			Thread th = new Thread(client);
 			clients.add(th);
 			th.start();
 		}
 		
-		clients.forEach(c-> {
-		try {
-			c.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}});
+		for(Thread client : clients) {
+			try {
+				client.join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		System.out.println("==============STATS=============");
+		System.out.println("Nombre de parties jouées: " + bowling.getTotalParties());
+		System.out.println("Parties par pistes:");
 		
-		
-		System.out.println("-------------- stats -------------");
+		for (Iterator<Entry<Piste, Integer>> iterator =  bowling.getPartiesParPiste().entrySet().iterator(); iterator.hasNext();) {
+			Entry<Piste, Integer>  entry = iterator.next();
+			System.out.println(entry.getKey() + "[" + entry.getValue() + " parties]");
+			
+		}
 	}
 }

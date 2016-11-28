@@ -4,80 +4,97 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Groupe {
-	//extends ThreadGroup ?
-	//groupe de 8
+	/**
+	 * La capacité du groupe
+	 */
+	private final int capacite;
+	private int clientChausser;
+	private int clientSurPiste;
+	private int id;
+	/**
+	 * Les clients du groupe
+	 */
+	private List<Client> clients;
 	
-	private int capacite;
-	private int numPiste;
-	private String nom;
-	
-	private List<Client> clients;//Client or Thread
-	
-	public Groupe(String nom, int capacite) {
-		this.clients = new ArrayList<Client>();
+	public Groupe(int id, int capacite) {
 		this.capacite = capacite;
-		numPiste = Bowling.PISTE_INDISPONIBLE;
-		this.nom = nom;
+		this.id = id;
+		this.clients = new ArrayList<>();
+		this.clientChausser = 0;
+		this.clientSurPiste = 0;
 	}
 	
 	public synchronized boolean isComplete() {
 		return this.clients.size() == capacite;
 	}
 	
-	public synchronized void addClient(Client c) {
-		if(!isComplete()) {
-			this.clients.add(c);
-			c.setGroupe(this);
-			System.out.println("[" + c + "] inscrit dans le groupe [" + this + "]");
-		}
+	public synchronized void addClient(Client client) {
+		this.clients.add(client);
+		client.setGroupe(this);
+		System.out.println(this + "[inscription]"+client);
+		notify();//TODO: facultatif ?
 	}
 	
-	public synchronized boolean toutesChaussuresBoowling(){
-		boolean res = true;
-		for(Client c : clients){
-			res = res && c.aSesChaussureDebowling();
+	public synchronized void waitUntilComplete() {
+		while(!this.isComplete()) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
-		return res;
+		System.out.println(this + "[" + Thread.currentThread().getName() + "][Complet]");
+		notify();
 	}
 	
-	public synchronized boolean tousSurPiste(){
-		boolean res = true;
-		for(Client c : clients){
-			res = res && c.estSurLaPiste();
+	public synchronized void addClientChausser(Client client) {
+		this.clientChausser++;
+		System.out.println(this + "" + client + "[prend une paire]");
+		notify();
+	}
+	
+	public synchronized void addClientSurPiste(Client client) {
+		this.clientSurPiste++;
+		System.out.println(this + "" + client + "[arrive sur piste]");
+		notify();
+	}
+	
+	public synchronized void waitAllChausser(Client client) {
+		while(this.clientChausser != capacite) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		return res;
+		
+		System.out.println(this + "" + client + "[Chaussée]");
+		notify();
 	}
 	
-	public synchronized boolean personneSurPiste(){
-		boolean res = false;
-		for(Client c : clients){
-			res = res || c.estSurLaPiste();
+	public synchronized void waitAllSurPiste(Client client) {
+		while(this.clientSurPiste != capacite) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		return !res;
+		System.out.println(this + "" + client + "[sur piste]");
+		notify();
 	}
 	
-	public synchronized boolean tousjouer(){
-		boolean res = true;
-		for(Client c : clients){
-			res = res && c.isJouer();
-		}
-		return res;
-	}
-	
-	public synchronized void setNumPiste(int numPiste) {
-		this.numPiste = numPiste;
-	}
-	
-	public synchronized int pisteReservee(){
-		return numPiste;
-	}
-
-	public String getNom() {
-		return nom;
-	}
-
+	@Override
 	public String toString() {
-		return nom;
+		// TODO Auto-generated method stub
+		return "[G-" + id + "]";
+	}
+
+	public synchronized int getSize() {
+		return this.clients.size();
 	}
 }
