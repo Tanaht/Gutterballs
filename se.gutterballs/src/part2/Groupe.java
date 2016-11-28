@@ -32,6 +32,7 @@ public class Groupe {
 		this.clients.add(client);
 		client.setGroupe(this);
 		System.out.println(this + "[inscription]"+client);
+		System.out.println(this + " place restante: " + (capacite - this.clients.size()));
 		notify();//TODO: facultatif ?
 	}
 	

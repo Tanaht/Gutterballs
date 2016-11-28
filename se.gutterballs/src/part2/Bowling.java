@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Bowling {
-	private Guichet guichet;
+	private Guichets guichets;
 	private SalleChaussure vestiaire;
 	private PisteDeDanse pisteDeDanse;
 	
@@ -18,7 +18,7 @@ public class Bowling {
 	
 	public Bowling(int nbPiste, int capaciteGroupe) {
 		this.pisteDeDanse = new PisteDeDanse();
-		this.guichet = new Guichet(capaciteGroupe);
+		this.guichets = new Guichets(capaciteGroupe);
 		this.vestiaire = new SalleChaussure();
 		this.totalParties = 0;
 		
@@ -85,7 +85,7 @@ public class Bowling {
 	
 	public void entrer(Client client) {
 		//phase d'inscription (prend 200 ms)
-		this.guichet.inscription(client);
+		this.guichets.inscription(client);
 		
 		Groupe groupe = client.getGroupe();
 		//attente des membres du groupe
@@ -107,7 +107,7 @@ public class Bowling {
 		this.libererPiste(groupe);
 		client.setGroupe(null);
 		System.out.println(client + "[quitte le groupe]" + groupe);
-		guichet.payer(client);
+		this.guichets.paiement(client);
 		vestiaire.rendre(client);
 	}
 }
