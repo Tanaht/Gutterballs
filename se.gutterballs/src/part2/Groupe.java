@@ -31,7 +31,7 @@ public class Groupe {
 	public synchronized void addClient(Client client) {
 		this.clients.add(client);
 		client.setGroupe(this);
-		System.out.println(this + "[inscription]"+client);
+		System.out.println(this + "[inscription pris en charge par guichetier:]"+client);
 		System.out.println(this + " place restante: " + (capacite - this.clients.size()));
 		notify();//TODO: facultatif ?
 	}

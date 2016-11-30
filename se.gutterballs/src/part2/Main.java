@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 
 public class Main {
 	public static void main(String[] args) {
-		int nbGroupe = 10, capaciteGroupe = 4, nbPistes = 5;
+		int nbGroupe = 70, capaciteGroupe = 8, nbPistes = 5;
 		
 		Bowling bowling = new Bowling(nbPistes, capaciteGroupe);
 		ArrayList<Thread> clients = new ArrayList<Thread>();
