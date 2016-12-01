@@ -7,15 +7,43 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Bowling {
+	/**
+	* guichet gerant l'inscription et le paiement
+	*/
 	private Guichets guichets;
+	/**
+	* Salle permettant de prendre et de rendre les chaussures
+	*/
 	private SalleChaussure vestiaire;
+	/**
+	* zone pour faire patienter (wait) les client le temps qu'une piste de bowling se libere
+	*/
 	private PisteDeDanse pisteDeDanse;
-	
+	/**
+	* liste de toutes les pistes de bowling
+	*/
 	private List<Piste> pistes;
+	/**
+	* Map de couple (Groupe,Piste) representant les reservation
+	* Un groupe reserve une piste
+	*/
 	private HashMap<Groupe, Piste> reservations;
+	/**
+	* Utilise pour les stats
+	* associe a chaque piste le nombre de partie ayant eue lieue
+	*/
 	private HashMap<Piste, Integer> partiesParPiste;
+	/**
+	* Utilise pour les stats
+	* represente le nombre total de parties ayant ete jouees
+	* ce nombre est egal au total de parties jouees par piste de partiesParPiste
+	*/
 	private int totalParties;
-	
+	/**
+	* constructeur
+	* @param nbPiste le nombre de piste totale que possede le bowling
+	* @param capaciteGroupe represente la taille que devrons faire les groupes
+	*/
 	public Bowling(int nbPiste, int capaciteGroupe) {
 		this.pisteDeDanse = new PisteDeDanse();
 		this.guichets = new Guichets(capaciteGroupe);
@@ -32,18 +60,33 @@ public class Bowling {
 		}
 		
 	}
-	
+	/**
+	* accesseur sur l'attribut partiesParPiste
+	*/
 	public synchronized HashMap<Piste, Integer> getPartiesParPiste() {
 		return this.partiesParPiste;
 	}
-	
+	/**
+	* accesseur sur l'attribut totalParties
+	*/
 	public synchronized int getTotalParties() {
 		return this.totalParties;
 	}
+	/**
+	* compare la taille de la liste des pistes avec la taille de la map des reservations
+	* Il y a au maximum une seule reservation par piste
+	* donc si leurs tailles sont equivalentes c'est qu'il n'y a pas de piste libre
+	* @return true si toutes les pistes sont libres ou reservees, si non false
+	*/
 	public synchronized boolean pisteOccupee() {
 		return this.pistes.size() == this.reservations.size();
 	}
-	
+	/**
+	* permet d'ajouter une reservation de piste sur la premire piste libre trouvee
+	* cette methode est appelee uniquement quand une piste est liberee
+	* si aucune n'est libre il s'agit donc d'une erreur
+	* @param groupe faisant le reservation
+	*/
 	public synchronized void reserverPiste(Groupe groupe) {
 		for(Piste piste : this.pistes) {
 			if(!this.reservations.containsValue(piste)) {
@@ -59,15 +102,23 @@ public class Bowling {
 			}
 		}
 	}
-	
+	/**
+	* permet de liberer une piste
+	* dans la map reservation on supprime l'entree correspondante
+	* @param groupe quittant sa piste
+	*/
 	private synchronized void libererPiste(Groupe groupe) {
 		if(this.reservations.containsKey(groupe)) {
-			System.out.println("[un membre de]" + groupe + "[indique que le groupe a  finit de jouer sur]" + this.reservations.get(groupe));
+			System.out.println("[un membre de]" + groupe + "[indique que le groupe aÂ  finit de jouer sur]" + this.reservations.get(groupe));
 			this.reservations.remove(groupe);
 			this.pisteDeDanse.pisteLiberee();
 		}
 	}
-	
+	/**
+	* Si le groupe de ce client n'a pas encore reserve de piste ce client effectue la reservation
+	* si non ne fait rien
+	* @param client
+	*/
 	public synchronized void reservation(Client client) {
 		
 		if(!this.reservations.containsKey(client.getGroupe())) {
@@ -78,11 +129,26 @@ public class Bowling {
 			System.out.println(client + "" + client.getGroupe() + "[piste deja reserver]" + this.reservations.get(client.getGroupe()));
 		}
 	}
-	
+	/**
+	* permet de savoir si un groupe a une piste de reservee
+	* @param groupe cherchant a savoir s'il posse une reservation
+	* @return true si le groupe a une reservation, si non false
+	*/
 	public boolean reserverPar(Groupe groupe) {
 		return this.reservations.containsKey(groupe);
 	}
-	
+	/**
+	* point d'entre du client
+	* le parcourt du client est ordonne dans cette methode
+	* il va s'inscrire, attendre que son groupe soit complet
+	* prendre ses chaussures, attendre que tout son groupe ait ses chaussures
+	* si aucune piste n'est libre il va patienter en dansant
+	* il va faire une reservation de piste pour son groupe
+	* il se positionne sur la piste et joue
+	* il quitte la piste, quitte son groupe
+	* il paye et s'en va
+	* @param client
+	*/
 	public void entrer(Client client) {
 		//phase d'inscription (prend 200 ms)
 		this.guichets.inscription(client);
