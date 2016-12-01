@@ -2,7 +2,6 @@ package part1;
 
 import java.util.List;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -140,11 +139,19 @@ public class Bowling {
 	
 	/**
 	* permet de savoir si un groupe a une piste de reservee
-	* @param groupe cherchant a savoir s'il posse une reservation
-	* @return true si le groupe a une reservation, si non false
+	* @param groupe cherchant a savoir s'il possède une reservation
+	* @return true si le groupe a une reservation, sinon false
 	*/
-	public boolean reserverPar(Groupe groupe) {
+	public synchronized boolean reserverPar(Groupe groupe) {
 		return this.reservations.containsKey(groupe);
+	}
+	
+	/**
+	 * @param groupe
+	 * @return La piste reservée par le groupe
+	 */
+	public synchronized Piste getPiste(Groupe groupe) {
+		return this.reservations.get(groupe);
 	}
 	
 	/**
@@ -176,7 +183,7 @@ public class Bowling {
 		
 		this.reservation(client);
 		
-		Piste piste = this.reservations.get(groupe);
+		Piste piste = this.getPiste(groupe);
 		
 		piste.utiliser(client);
 		//Un membre du groupe va indiquer que la piste est libre.

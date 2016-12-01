@@ -82,7 +82,7 @@ public class Guichets {
 	*/
 	public synchronized void arriverClient(Client client) {
 		this.fileInscriptions.add(client);
-		notifyAll();
+		notify();
 	}
 	/**
 	* met le client en attente le temps que son inscription soit terminee
@@ -106,7 +106,7 @@ public class Guichets {
 	*/
 	private synchronized void departClient(Client client) {
 		this.filePaiements.add(client);
-		notifyAll();
+		notify();
 	}
 	/**
 	* met le client en attente le temps que son paiement soit termine
