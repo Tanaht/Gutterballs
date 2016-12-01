@@ -1,5 +1,7 @@
 package part2;
-
+/**
+* Thread faisant les inscription et les paiement des clients
+*/
 public class Guichetier implements Runnable {
 	/**
 	* guichet auquel le guichetier est ratache

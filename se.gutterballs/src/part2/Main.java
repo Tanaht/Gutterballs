@@ -3,7 +3,9 @@ package part2;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map.Entry;
-
+/**
+* Main
+*/
 public class Main {
 	public static void main(String[] args) {
 		int nbGroupe = 10, capaciteGroupe = 8, nbPistes = 5;
