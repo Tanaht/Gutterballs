@@ -43,13 +43,13 @@ public class PisteDeDanse {
 	}
 	
 	public synchronized void pisteLiberee() {
-		System.out.println("[PisteDeDanse][Une piste est libérée]");
+		System.out.println("[PisteDeDanse][Une piste est libre]");
 		this.pisteLibre = true;
 		notify();
 	}
 	
 	public synchronized void pistesOccupee() {
-		System.out.println(Thread.currentThread().getName() + "[PisteDeDanse][les pistes sont occupée]");
+		System.out.println(Thread.currentThread().getName() + "[PisteDeDanse][les pistes sont occupees]");
 		this.pisteLibre = false;
 		notify();
 	}

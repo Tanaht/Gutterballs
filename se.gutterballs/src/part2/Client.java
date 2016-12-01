@@ -4,9 +4,11 @@ public class Client implements Runnable{
 	private Groupe groupe;
 	private int chaussures;
 	private Bowling bowling;
+	private int nom;
 	
-	public Client(Bowling b) {
+	public Client(Bowling b, int nom) {
 		this.bowling = b;
+		this.nom = nom;
 		this.chaussures = 0;
 	}
 
@@ -29,8 +31,7 @@ public class Client implements Runnable{
 	
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		return "[" + Thread.currentThread().getName() + "]";
+		return "[Client-" + nom + "]";
 	}
 	
 	public Groupe getGroupe() {

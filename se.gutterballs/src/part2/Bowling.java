@@ -50,7 +50,7 @@ public class Bowling {
 				this.reservations.put(groupe, piste);
 				this.totalParties++;
 				this.partiesParPiste.put(piste, this.partiesParPiste.get(piste)+1);
-				System.out.println(groupe + "[" + Thread.currentThread().getName() + "][piste reserver]" +  this.reservations.get(groupe));
+				System.out.println(groupe + "[" + Thread.currentThread().getName() + "][piste reservee]" +  this.reservations.get(groupe));
 				
 				if(this.pisteOccupee())
 					this.pisteDeDanse.pistesOccupee();
@@ -62,7 +62,7 @@ public class Bowling {
 	
 	private synchronized void libererPiste(Groupe groupe) {
 		if(this.reservations.containsKey(groupe)) {
-			System.out.println("[un membre de]" + groupe + "[indique que le groupe à finit de jouer sur]" + this.reservations.get(groupe));
+			System.out.println("[un membre de]" + groupe + "[indique que le groupe a� finit de jouer sur]" + this.reservations.get(groupe));
 			this.reservations.remove(groupe);
 			this.pisteDeDanse.pisteLiberee();
 		}
@@ -75,7 +75,7 @@ public class Bowling {
 			this.reserverPiste(client.getGroupe());
 		}
 		else {
-			System.out.println(client + "" + client.getGroupe() + "[piste déjà reserver]" + this.reservations.get(client.getGroupe()));
+			System.out.println(client + "" + client.getGroupe() + "[piste deja reserver]" + this.reservations.get(client.getGroupe()));
 		}
 	}
 	
@@ -97,6 +97,7 @@ public class Bowling {
 		
 		if(this.pisteOccupee() && !this.reserverPar(client.getGroupe()))
 			this.pisteDeDanse.echauffement(client);
+		
 		
 		this.reservation(client);
 		

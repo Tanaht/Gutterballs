@@ -15,9 +15,9 @@ public class Guichets {
 		this.fileInscriptions = new Stack<>();
 		this.filePaiements = new Stack<>();
 		
-		Guichetier un = new Guichetier(this);
-		Guichetier deux = new Guichetier(this);
-		Guichetier trois = new Guichetier(this);
+		Guichetier un = new Guichetier(this,1);
+		Guichetier deux = new Guichetier(this,2);
+		Guichetier trois = new Guichetier(this,3);
 		
 		Thread th1 = new Thread(un);
 		Thread th2 = new Thread(deux);
@@ -58,7 +58,6 @@ public class Guichets {
 			try {
 				wait();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -77,14 +76,13 @@ public class Guichets {
 			try {
 				wait();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 	}
 
 
-	public  void travailler(Guichetier guichetier) {
+	public void travailler(Guichetier guichetier) {
 		while(true) {//les Threads qui exécutent cette fonction sont des démons
 			guichetier.gererClient(this.attendreClients(guichetier));
 		}
@@ -103,17 +101,16 @@ public class Guichets {
 			try {
 				wait();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		
 		if(this.filePaiements.isEmpty()) {
-			guichetier.changerTravail(Guichetier.inscription);
+			guichetier.sePreparerInscription();
 			return this.fileInscriptions.pop();
 		}
 		
-		guichetier.changerTravail(Guichetier.paiement);
+		guichetier.sePreparerPaiement();
 		return this.filePaiements.pop();
 		
 	}

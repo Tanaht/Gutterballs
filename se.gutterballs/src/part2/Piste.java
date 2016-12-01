@@ -12,6 +12,7 @@ public class Piste {
 	public void utiliser(Client client) {
 		client.getGroupe().addClientSurPiste(client);
 		client.getGroupe().waitAllSurPiste(client);
+		System.out.println(client.getGroupe()+""+client+"[joue sur la piste]"+this);
 		this.jouer();
 	}
 	public void jouer() {

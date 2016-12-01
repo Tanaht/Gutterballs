@@ -31,7 +31,7 @@ public class Groupe {
 	public synchronized void addClient(Client client) {
 		this.clients.add(client);
 		client.setGroupe(this);
-		System.out.println(this + "[inscription pris en charge par guichetier:]"+client);
+		System.out.println(this + "[inscription prise en charge]["+Thread.currentThread().getName()+"]");
 		System.out.println(this + " place restante: " + (capacite - this.clients.size()));
 		notify();//TODO: facultatif ?
 	}
@@ -46,7 +46,7 @@ public class Groupe {
 			}
 		}
 		
-		System.out.println(this + "[" + Thread.currentThread().getName() + "][Complet]");
+		System.out.println(this + "[Groupe-" + id + "][Complet]");
 		notify();
 	}
 	
@@ -58,7 +58,7 @@ public class Groupe {
 	
 	public synchronized void addClientSurPiste(Client client) {
 		this.clientSurPiste++;
-		System.out.println(this + "" + client + "[arrive sur piste]");
+		System.out.println(this + "" + client + "[se dirige vers la piste]");
 		notify();
 	}
 	
@@ -67,12 +67,11 @@ public class Groupe {
 			try {
 				wait();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		
-		System.out.println(this + "" + client + "[Chaussée]");
+		System.out.println(this + "" + client + "[Chausse]");
 		notify();
 	}
 	

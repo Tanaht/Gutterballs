@@ -3,10 +3,11 @@ package part2;
 public class Guichetier implements Runnable {
 	private Guichets guichets;
 	private int travail;
+	private int nom;
 	public static final int inscription = 0;
 	public static final int paiement = 1;
 	
-	public Guichetier(Guichets guichets) {
+	public Guichetier(Guichets guichets, int nom) {
 		this.guichets = guichets;
 	}
 	@Override
@@ -27,8 +28,12 @@ public class Guichetier implements Runnable {
 		this.guichets.notifierFinInscription();
 	}
 	
-	public void changerTravail(int travail) {
-		this.travail = travail;
+	public void sePreparerPaiement(){
+		this.travail = this.paiement;
+	}
+	
+	public void sePreparerInscription(){
+		this.travail = this.inscription;
 	}
 	
 	public void gererClient(Client client) {
@@ -50,6 +55,6 @@ public class Guichetier implements Runnable {
 	}
 	
 	public String toString() {
-		return "[Guichetier:" + Thread.currentThread().getName() + "]";
+		return "[Guichetier-" + nom + "]";
 	}
 }
