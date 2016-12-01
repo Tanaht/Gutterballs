@@ -5,7 +5,9 @@ import java.util.List;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
+/**
+* est un Moniteur qui calcule le nombre de parties et il fais en sorte que deux groupe ne reserve pas la même piste
+*/
 public class Bowling {
 	/**
 	* guichet gerant l'inscription et le paiement

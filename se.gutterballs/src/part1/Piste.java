@@ -1,7 +1,9 @@
 package part1;
 
 import java.util.Random;
-
+/**
+* Fait jouer les clients 
+*/
 public class Piste {
 	/**
 	* numero d'identification de la piste

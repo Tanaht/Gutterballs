@@ -1,5 +1,7 @@
 package part1;
-
+/**
+* Moniteur permettant d'acceder au stock de chaussure en en prenant ou en en rendant
+*/
 public class SalleChaussure {
 	/**
 	* fait prendre une paire de chaussure au client, cela prend un certain temps

@@ -1,7 +1,10 @@
 package part1;
 
 import java.util.Random;
-
+/**
+* 
+* Moniteur qui realise le regroupement des clients en groupe
+*/
 public class Guichet {
 	/**
 	* numero d'identification du guichet

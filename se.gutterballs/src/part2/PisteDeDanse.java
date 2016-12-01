@@ -1,7 +1,9 @@
 package part2;
 
 import java.util.LinkedList;
-
+/**
+* Moniteur qui empêche un groupe de réserver une piste alors que toutes les pistes sont déjà occupée.
+*/
 public class PisteDeDanse {
 	/**
 	* true si aucune piste n'est libre, si non false

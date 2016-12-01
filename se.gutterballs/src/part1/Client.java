@@ -1,5 +1,8 @@
 package part1;
 
+/**
+* est un Thread qui effectuera le parcours dans le bowling
+*/
 public class Client implements Runnable{
 	/**
 	* groupe auquel appartient le client, peut être null

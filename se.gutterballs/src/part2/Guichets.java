@@ -1,7 +1,9 @@
 package part2;
 
 import java.util.Stack;
-
+/**
+* Moniteur charge de mettre en attente les clients de façon ordonnee lors ceux-ci veulent s'inscrire ou payer leur note
+*/
 public class Guichets {
 	/**
 	* groupe en cours de creation

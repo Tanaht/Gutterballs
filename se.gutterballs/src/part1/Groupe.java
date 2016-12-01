@@ -3,6 +3,10 @@ package part1;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+* est un moniteur permettant de gerrer un ensembles de thread (Client)
+* il les fait se deplacer en meme temps et les fait attendre au meme endroit quand il y en a besoin
+*/
 public class Groupe {
 	/**
 	 * La capacité du groupe
